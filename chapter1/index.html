@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chapter 1: Overview</title>
+</head>
+<body>
+  <h1>Chapter 1: Overview</h1>
+  <p><!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インタラクティブ日本語構造解密</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Harmony - A calm and educational palette using cream, gentle blue, and warm orange for highlights. -->
+    <!-- Application Structure Plan: I designed a three-part "Learning Journey" (Foundation, Combination, Practice) instead of a linear slide format. This encourages exploration and active learning. The core interaction is a sentence deconstruction tool that allows users to click and see the structure, directly fulfilling the lesson's goal of moving from memorization to understanding. Navigation is handled by a simple header that smoothly scrolls to each section, making the single-page experience intuitive for beginner learners. -->
+    <!-- Visualization & Content Choices: Report Info (単語, 文節 concepts) -> Goal (Understand sentence structure) -> Viz/Presentation (Interactive cards, JS-powered sentence analyzer) -> Interaction (Click to deconstruct sentences, interactive quiz) -> Justification (Active engagement is better for grasping abstract grammar rules than passive reading) -> Library/Method (Vanilla JS for all interactions, Tailwind CSS for layout and styling to create diagrams without images or SVG, fulfilling the constraints). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
+            background-color: #FDF6E3; /* Warm Cream background */
+        }
+        .concept-card {
+            background-color: #FFFFFF;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .interactive-sentence {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .interactive-sentence:hover {
+            background-color: #E0F7FA; /* Light Cyan hover */
+        }
+        .active-sentence {
+            background-color: #B2EBF2; /* Cyan focus */
+            border-left: 4px solid #00BCD4;
+        }
+        .quiz-option {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .quiz-correct {
+            background-color: #C8E6C9 !important; /* Green for correct */
+            color: #2E7D32;
+            border-color: #4CAF50;
+        }
+        .quiz-incorrect {
+            background-color: #FFCDD2 !important; /* Red for incorrect */
+            color: #C62828;
+            border-color: #F44336;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl text-gray-800">
+
+        <!-- Header and Introduction -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-sky-800 mb-2">日本語構造解密</h1>
+            <p class="text-lg text-gray-600">〜「積木（つみき）」から「家」を建てるように日本語を理解しよう〜</p>
+            <p class="mt-4">このページは、日本語の文がどのように作られているかを理解するためのインタラクティブな学習ツールです。静的なスライドではなく、実際にクリックして文の構造を「解密」していきましょう。</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-white/80 backdrop-blur-md sticky top-4 z-10 p-2 rounded-xl shadow-md mb-12 flex justify-center space-x-2 md:space-x-6">
+            <a href="#kiso" class="nav-link px-4 py-2 rounded-lg hover:bg-sky-100 text-sky-700 font-semibold transition-colors">基礎編</a>
+            <a href="#kumitate" class="nav-link px-4 py-2 rounded-lg hover:bg-sky-100 text-sky-700 font-semibold transition-colors">組立編</a>
+            <a href="#jissen" class="nav-link px-4 py-2 rounded-lg hover:bg-sky-100 text-sky-700 font-semibold transition-colors">実践編</a>
+        </nav>
+
+        <!-- Section 1: Foundation -->
+        <section id="kiso" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-sky-700 border-b-4 border-sky-200 pb-2 mb-8">基礎編：言語の「積木」を知る</h2>
+            <p class="mb-8 text-gray-600">まず、日本語の文を構成する最小の部品、「単語」と「品詞」について学びます。これがすべての基本です。</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 単語 Card -->
+                <div class="concept-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-orange-600 mb-4">① 単語 (たんご)</h3>
+                    <p class="mb-4">意味を持つ最小の「積木」です。これ以上分解すると意味がわからなくなります。</p>
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <p class="font-semibold">例：</p>
+                        <p class="text-lg">「わたし」「がっこう」「たべる」</p>
+                    </div>
+                </div>
+
+                <!-- 品詞 Card -->
+                <div class="concept-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-orange-600 mb-4">② 品詞 (ひんし)</h3>
+                    <p class="mb-4">単語の「種類」や「性質」のことです。品詞がわかると、単語が**「変身」**するかどうかが分かります。</p>
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <p class="font-semibold">一番大切なルール：</p>
+                        <p class="text-lg">動詞 (どうし) や 形容詞 (けいようし) は「変身」する！</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-card p-6 rounded-xl shadow-lg mt-8">
+                <h3 class="text-2xl font-bold mb-4 text-center">初級で覚えるべき品詞の分類</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-sky-100">
+                                <th class="p-3 font-semibold">品詞</th>
+                                <th class="p-3 font-semibold">例</th>
+                                <th class="p-3 font-semibold">役割</th>
+                                <th class="p-3 font-semibold text-center">変身(活用)するか？</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3 font-bold">名詞 (めいし)</td>
+                                <td class="p-3">わたし、つくえ、東京</td>
+                                <td class="p-3">人、物、場所の名前</td>
+                                <td class="p-3 text-center text-2xl text-red-500 font-bold">×</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-bold">動詞 (どうし)</td>
+                                <td class="p-3">たべる、いく、する</td>
+                                <td class="p-3">動作や存在</td>
+                                <td class="p-3 text-center text-2xl text-green-500 font-bold">✓</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="p-3 font-bold">い形容詞</td>
+                                <td class="p-3">おおきい、さむい</td>
+                                <td class="p-3">物事の様子</td>
+                                <td class="p-3 text-center text-2xl text-green-500 font-bold">✓</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold">助詞 (じょし)</td>
+                                <td class="p-3">は、が、を、に、で</td>
+                                <td class="p-3">単語の関係を示す「接着剤」</td>
+                                <td class="p-3 text-center text-2xl text-red-500 font-bold">×</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Combination -->
+        <section id="kumitate" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-sky-700 border-b-4 border-sky-200 pb-2 mb-8">組立編：単語を「文節」にしよう</h2>
+            <p class="mb-8 text-gray-600">単語だけでは文は作れません。「助詞」という接着剤を使って、意味のあるかたまり「文節」を作る方法を学びます。これができれば、文の骨格が見えてきます。</p>
+
+            <div class="concept-card p-8 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-bold text-orange-600 mb-4 text-center">文節 (ぶんせつ) の仕組み</h3>
+                <div class="flex items-center justify-center space-x-4 text-center">
+                    <div class="bg-gray-100 p-4 rounded-lg shadow">
+                        <p class="text-lg font-bold">単語</p>
+                        <p class="text-sm text-gray-500">(名詞など)</p>
+                    </div>
+                    <div class="text-3xl font-bold text-orange-500">+</div>
+                    <div class="bg-gray-100 p-4 rounded-lg shadow">
+                        <p class="text-lg font-bold">助詞</p>
+                        <p class="text-sm text-gray-500">(は, を, に...)</p>
+                    </div>
+                    <div class="text-3xl font-bold text-orange-500">→</div>
+                    <div class="bg-orange-100 p-4 rounded-lg shadow-inner border border-orange-300">
+                        <p class="text-xl font-bold text-orange-700">文節</p>
+                        <p class="text-sm text-gray-600">(意味のかたまり)</p>
+                    </div>
+                </div>
+                <p class="text-center mt-6 text-gray-600">助詞は、単語に「役割のラベル」を貼る働きをします。</p>
+            </div>
+            
+            <div class="concept-card p-6 rounded-xl shadow-lg mt-8">
+                <h3 class="text-2xl font-bold mb-4 text-center">クリックして文の構造を解密！</h3>
+                <p class="text-center mb-6">下の文をクリックすると、文節ごとに分解されて役割が表示されます。</p>
+                <div id="sentence-container">
+                    <p data-sentence-id="1" class="interactive-sentence text-xl p-4 my-2 rounded-lg border-2 border-transparent font-semibold">太郎はケーキを買います。</p>
+                    <p data-sentence-id="2" class="interactive-sentence text-xl p-4 my-2 rounded-lg border-2 border-transparent font-semibold">私は毎日日本語を勉強します。</p>
+                </div>
+                <div id="analysis-box" class="mt-6 bg-sky-50 p-6 rounded-lg shadow-inner hidden">
+                    <!-- Analysis will be injected here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Practice -->
+        <section id="jissen" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-sky-700 border-b-4 border-sky-200 pb-2 mb-8">実践編：クイズで力試し！</h2>
+            <p class="mb-8 text-gray-600">学んだ知識を使って、クイズに挑戦してみましょう。正解すると緑色、間違えると赤色で表示されます。</p>
+
+            <div class="space-y-8">
+                <!-- Quiz 1 -->
+                <div class="concept-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">挑戦①：文の分解</h3>
+                    <p class="mb-4 text-lg">「友達と映画を見ました。」の文で、「と」の役割は何ですか？</p>
+                    <div id="quiz1" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button data-correct="false" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">動作の対象</button>
+                        <button data-correct="true" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">一緒に行動する相手</button>
+                        <button data-correct="false" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">場所</button>
+                    </div>
+                </div>
+                
+                <!-- Quiz 2 -->
+                <div class="concept-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">挑戦②：単語の「変身」</h3>
+                    <p class="mb-4 text-lg">「食べます」を過去形にすると、どうなりますか？</p>
+                    <div id="quiz2" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <button data-correct="false" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">食べない</button>
+                        <button data-correct="false" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">食べたい</button>
+                        <button data-correct="true" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">食べました</button>
+                    </div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="concept-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-4">挑戦③：否定形への「変身」</h3>
+                    <p class="mb-4 text-lg">「私はコーヒーを飲みました。」を否定文にすると、どうなりますか？</p>
+                     <div id="quiz3" class="grid grid-cols-1 gap-4">
+                        <button data-correct="true" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">私はコーヒーを飲みませんでした。</button>
+                        <button data-correct="false" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">私はコーヒーを飲みます。</button>
+                        <button data-correct="false" class="quiz-option p-4 border-2 rounded-lg hover:bg-gray-100">私はコーヒーを飲んでいません。</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sentenceData = {
+                '1': {
+                    title: '「太郎はケーキを買います。」の構造',
+                    bunsestu: [
+                        { jp: '太郎は', role: '主題・主語', explanation: '文のテーマ。「〜は」で示されることが多いです。' },
+                        { jp: 'ケーキを', role: '目的語', explanation: '「買う」という動作の対象。「〜を」で示されます。' },
+                        { jp: '買います', role: '述語(動詞)', explanation: '文の結論となる動作です。' }
+                    ]
+                },
+                '2': {
+                    title: '「私は毎日日本語を勉強します。」の構造',
+                    bunsestu: [
+                        { jp: '私は', role: '主題・主語', explanation: '文のテーマ。「私」が何をしますか？' },
+                        { jp: '毎日', role: '時間', explanation: '「いつ」勉強しますか？ 助詞がない文節もあります。' },
+                        { jp: '日本語を', role: '目的語', explanation: '「勉強する」という動作の対象です。' },
+                        { jp: '勉強します', role: '述語(動詞)', explanation: '文の結論となる動作です。' }
+                    ]
+                }
+            };
+
+            const sentenceContainer = document.getElementById('sentence-container');
+            const analysisBox = document.getElementById('analysis-box');
+            let currentSentence = null;
+
+            sentenceContainer.addEventListener('click', (event) => {
+                const target = event.target.closest('.interactive-sentence');
+                if (!target) return;
+
+                const sentenceId = target.dataset.sentenceId;
+                
+                if (currentSentence) {
+                    currentSentence.classList.remove('active-sentence');
+                }
+                
+                target.classList.add('active-sentence');
+                currentSentence = target;
+
+                const data = sentenceData[sentenceId];
+                let html = `<h4 class="text-lg font-bold mb-4 text-sky-800">${data.title}</h4><div class="space-y-3">`;
+                data.bunsestu.forEach(b => {
+                    html += `
+                        <div class="flex items-start">
+                            <div class="w-1/3 font-bold text-orange-700 text-lg pr-2">${b.jp}</div>
+                            <div class="w-2/3">
+                                <p class="font-semibold text-sky-900">${b.role}</p>
+                                <p class="text-sm text-gray-600">${b.explanation}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+
+                analysisBox.innerHTML = html;
+                analysisBox.classList.remove('hidden');
+            });
+
+            document.querySelectorAll('.quiz-option').forEach(button => {
+                button.addEventListener('click', () => {
+                    const parent = button.parentElement;
+                    const isCorrect = button.dataset.correct === 'true';
+
+                    Array.from(parent.children).forEach(child => {
+                        child.disabled = true;
+                        if (child.dataset.correct === 'true') {
+                            child.classList.add('quiz-correct');
+                        } else {
+                            child.classList.add('quiz-incorrect');
+                        }
+                    });
+
+                    if (!isCorrect) {
+                        button.classList.add('quiz-incorrect');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
+</p>
+  <p><a href="../index.html">← Back to Home</a></p>
+</body>
+</html>
