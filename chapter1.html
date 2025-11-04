@@ -8,7 +8,272 @@
 <body>
   <a href="index.html">← 返回首页</a>
   <h1>第一章：心理学的起点</h1>
-  <p>这里写第一章的内容。</p>
+  <p><!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奥特曼文章的日中对照阅读器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: #f0f4f8;
+            color: #1a202c;
+        }
+        .text-ja {
+            color: #3182ce; /* Blue for Japanese */
+            font-weight: 600;
+        }
+        .text-zh {
+            color: #c53030; /* Red for Chinese */
+            font-weight: 400;
+        }
+        .sentence-item {
+            cursor: pointer;
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            line-height: 1.8;
+            /* Initial border color for no-ruby Japanese */
+            border-left: 5px solid #1a202c; 
+        }
+        .sentence-item[data-state="0"] {
+            border-left: 5px solid #1a202c; /* No Ruby - Darker Border */
+        }
+        .sentence-item[data-state="1"] {
+            border-left: 5px solid #3182ce; /* With Ruby - Blue Border */
+        }
+        .sentence-item[data-state="2"] {
+            border-left: 5px solid #c53030; /* Chinese - Red Border */
+        }
+
+        .sentence-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        /* Style for the title/heading lines */
+        .title-line {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            font-weight: 700;
+            border-left: 5px solid #2d3748;
+        }
+        /* Custom style for ruby text to ensure better visibility */
+        rt {
+            font-size: 0.6em; /* Smaller size for ruby text */
+            opacity: 0.8;
+            color: #3182ce;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl p-6 md:p-10">
+
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 border-b-4 border-red-500 pb-2">
+            奥特曼文章的日中对照阅读器（三段式切换）
+        </h1>
+        <p class="text-gray-600 mb-8 italic">
+            点击下方的句子，将在 **日文（无注音）** → **日文（带注音）** → **中文翻译** 之间循环切换。
+        </p>
+
+        <div id="article-content" class="space-y-4">
+            <!-- Article content will be inserted here by JavaScript -->
+        </div>
+
+    </div>
+
+    <script>
+        // Helper function to convert text with [漢字]{かな} format to HTML <ruby> tags
+        function convertToRuby(text) {
+            // [漢字]{かな} のパターンを検索し、<ruby>タグに変換
+            return text.replace(/\[([^\]]+)\]\{([^\}]+)\}/g, (match, kanji, kana) => {
+                // <rp> tags are for browsers that don't support ruby, putting the kana in parentheses
+                return `<ruby>${kanji}<rp>(</rp><rt>${kana}</rt><rp>)</rp></ruby>`;
+            });
+        }
+        
+        // 新增: Helper function to strip ruby markup, returning only the kanji/text part (Japanese without furigana)
+        function stripRubyMarkup(text) {
+            // [漢字]{かな} のパターンを検索し、漢字部分（$1）だけを抽出
+            return text.replace(/\[([^\]]+)\]\{([^\}]+)\}/g, (match, kanji, kana) => kanji);
+        }
+
+        const articleData = [
+            {
+                ja: "ウルトラマンは「[中国]{ちゅうごく}で[稼]{かせ}ぐ」[他作品]{たさくひん}と[異]{こと}なる[構造]{こうぞう}　[人気]{にんき}×[中国]{ちゅうごく}ゆえの“[課題]{かだい}”も[露見]{ろけん}、[直近]{ちょっきん}[決算]{けっさん}は[減退]{げんたい}",
+                zh: "奥特曼拥有与众不同的“在中国市场盈利”的结构；人气高涨也暴露出中国特有的“挑战”，近期决算出现衰退。",
+                isTitle: true
+            },
+            {
+                ja: "[円谷]{つぶらや}フィールズの[人気]{にんき}シリーズ「ウルトラマン」は[近年]{きんねん}[海外展開]{かいがいてんかい}が[顕著]{けんちょ}で、[他作品]{たさくひん}とは[異]{こと}なり「[中国]{ちゅうごく}で[稼]{かせ}ぐ」という[特徴的]{とくちょうてき}な[収益構造]{しゅうえきこうぞう}を[持]{も}つ。",
+                zh: "圆谷制作的热门系列“奥特曼”近年来海外拓展显著，与其它作品不同，拥有“在中国市场盈利”这一独特的收入结构。",
+            },
+            {
+                ja: "[昨年度]{さくねんど}の[円谷]{つぶらや}プロ[全体]{ぜんたい}のライセンス[収入]{しゅうにゅう}で[国内]{こくない}は9.6[億]{おく}[円]{えん}だったのに[対]{たい}し、[中国単体]{ちゅうごくたんたい}で52[億]{おく}7000[万]{まん}[円]{えん}を[記録]{きろく}。",
+                zh: "在上一年度圆谷制作总体的授权收入中，日本国内为9.6亿日元，而中国大陆市场则单独创下了52.7亿日元的纪录。",
+            },
+            {
+                ja: "[海外全体]{かいがいぜんたい}の[約]{やく}90%を[占]{し}めており、[同市場]{どうしじょう}での[力強]{ちからづよ}い[伸]{の}びが[際立]{きわだ}った。",
+                zh: "它占据了海外总收入的约90%，在中国市场的强劲增长非常突出。",
+            },
+            {
+                ja: "【[画像]{がぞう}】[上海]{シャンハイ}で[開催]{かいさい}された[展示会]{てんじかい}の[模様]{もよう}・[地域別]{ちいきべつ}のライセンス[収入]{しゅうにゅう}[状況]{じょうきょう}など（[全]{ぜん}6[枚]{まい}）",
+                zh: "【图片】在上海举办的展览会情况、各地区的授权收入状况等（共6张）",
+                isCaption: true
+            },
+            {
+                ja: "[同社]{どうしゃ}は10[月]{がつ}31[日]{にち}に2026[年]{ねん}3[月期]{がつき}の[中間決算]{ちゅうかんけっさん}を[公表]{こうひょう}。",
+                zh: "该公司于10月31日公布了截至2026年3月期的中期财务报告。",
+            },
+            {
+                ja: "この[開示]{かいじ}が[行]{おこな}われた[前]{まえ}のタイミングに「スーパー[戦隊]{せんたい}」の[終了報道]{しゅうりょうほうどう}（[公式]{こうしき}[未発表]{みはっぴょう}）がなされただけに、[他]{ほか}のヒーロー[作品]{さくひん}にはない、ウルトマンの[特異的]{とくいでき}な[海外展開]{かいがいてんかい}がソーシャルメディアなどで[取]{と}り[上]{あ}げられ[注目]{ちゅうもく}を[集]{あつ}めていた。",
+                zh: "正是在这份报告公布前夕，“超级战队”系列结束的报道（官方未宣布）传出，使得奥特曼在社交媒体上因其独特且与众不同的海外拓展而备受关注。",
+            },
+            {
+                ja: "[同社]{どうしゃ}は[今年]{ことし}7[月]{がつ}から[約]{やく}2[年半]{ねんはん}にわたる「ウルトラマンシリーズ[放送開始]{ほうそうかいし}60[周年]{しゅうねん}」[記念事業]{きねんじぎょう}を[展開中]{てんかいちゅう}で、[中国]{ちゅうごく}・[上海]{シャンハイ}にて[同作]{どうさく}の[記念展示]{きねんてんじ}イベント「追光之旅·展望奥特曼60周年主题展」を9[月]{がつ}まで[開催]{かいさい}した。",
+                zh: "该公司正开展为期约两年半的“奥特曼系列播出60周年”纪念项目，并在中国上海举办了纪念展览“追光之旅·展望奥特曼60周年主题展”，活动持续至9月。",
+            },
+            {
+                ja: "[会場]{かいじょう}となったデパート・[上海]{シャンハイ}[新世界城]{しんせかいじょう}では[地上階]{ちじょうかい}で[壁面]{へきめん}ラッピングやモニュメント[展示]{てんじ}などを[撮影]{さつえい}する[人]{ひと}も[多]{おお}く[見受]{みう}けれれた。",
+                zh: "在作为会场的上海新世界城百货公司，许多人在底层拍摄墙面装饰和纪念碑式的展品。",
+            },
+            {
+                ja: "[直近]{ちょっきん}は「50%[減]{げん}」と[落]{お}ち[込]{こ}みも",
+                zh: "近期出现“减少50%”的下滑",
+                isTitle: true
+            },
+            {
+                ja: "[人気上昇]{にんきじょうしょう}とともに[好調]{こうちょう}を[見]{み}せている[同作]{どうさく}だが、[直近]{ちょっきん}の[四半期決算]{しはんきけっさん}では[減退]{げんたい}も[目立]{めだ}っている。",
+                zh: "尽管该作品伴随人气上升表现良好，但在最近的季度财报中，衰退也十分明显。",
+            },
+            {
+                ja: "[今回]{こんかい}の[中間決算]{ちゅうかんけっさん}において「ウルトラマン」などの[同社]{どうしゃ}IP[関連]{かんれん}（コンテンツ&デジタル[事業]{じぎょう}セグメント）の[売上高]{うりあげだか}は[前年同期比]{ぜんねんどうきひ}5.7%[減]{げん}、[営業利益]{えいぎょうりえき}は[同]{どう}64.6%[減]{げん}となった。",
+                zh: "在本次中期财报中，包括“奥特曼”在内的该公司IP相关业务（内容与数字业务部门）的销售额同比下降5.7%，营业利润同比下降64.6%。",
+            },
+            {
+                ja: "これについて[同社]{どうしゃ}は「[中国市場]{ちゅうごくしじょう}において、[主力商品]{しゅりょくしょうひん}のブロック[玩具]{がんぐ}やトレーディングカード[関連]{かんれん}のライセンス[収入]{しゅうにゅう}が[減少]{げんしょう}し、[一時的]{いちじてき}に[減収]{げんしゅう}・[減益]{げんえき}となった。",
+                zh: "对此，该公司解释称：“在中国市场，主力商品——积木玩具和集换式卡牌相关的授权收入减少，导致暂时性的营收和利润下降。",
+            },
+            {
+                ja: "[一過性]{いっかせい}のヒット[商品]{しょうひん}の[販売]{はんばい}が[落]{お}ち[着]{つ}いたこと、IPの[多様化]{たようか}に[伴]{ともな}い[現地]{げんち}パートナーが[取]{と}り[扱]{あつか}い[商品]{しょうひん}の[見直]{みなお}しを[行]{おこな}ったことが[主]{おも}な[要因]{よういん}」と[説明]{せつめい}。",
+                zh: "主要原因是：一次性爆款商品的销售放缓，以及伴随IP多元化，当地合作伙伴对所售商品进行了重新审视。”",
+            },
+            {
+                ja: "[事業収入]{じぎょうしゅうにゅう}を[見]{み}ると、[中国]{ちゅうごく}からのライセンス[収入]{しゅうにゅう}は14[億]{おく}4000[万]{まん}[円]{えん}と[前年同期比]{ぜんねんどうきひ}50.3%[減]{げん}と[大]{おお}きく[落]{お}ち[込]{こ}んでいる。",
+                zh: "从业务收入来看，来自中国的授权收入为14.4亿日元，同比大幅下降50.3%。",
+            },
+            {
+                ja: "[加]{くわ}えて、3[ヶ月]{かげつ}[前]{まえ}の[四半期決算]{しはんきけっさん}では\"[好調]{こうちょう}ゆえ\"の[問題]{もんだい}として「[非正規品流通]{ひせいきひんりゅうつう}による[収益機会]{しゅうえききかい}の[損失]{そんしつ}」という[側面]{そくめん}も[露見]{ろけん}。",
+                zh: "此外，三个月前的季度财报中还暴露了“因业绩良好而产生的问题”——“非正版流通导致的营收机会损失”这一侧面。",
+            },
+            {
+                ja: "[同社]{どうしゃ}は「ウルトラマンの[人気]{にんき}が[高]{たか}まる[中国市場]{ちゅうごくしじょう}において、[非正規品]{ひせいきひん}の[流通]{りゅうつう}が[顕著]{けんちょ}となり、ライセンスビジネスの[収益機会]{しゅうえききかい}に[影響]{えいきょう}を[及]{およ}ぼした」と[言及]{げんきゅう}している。",
+                zh: "该公司提到：“在奥特曼人气高涨的中国市场，非正版商品的流通现象显著，对授权业务的营收机会造成了影响。”",
+            },
+            {
+                ja: "こうした[問題]{もんだい}の[対抗策]{たいこうさく}の[一]{ひと}つとして、[同社]{どうしゃ}は[越境]{えっきょう}ECサービス「Tmall[国際]{こくさい}」での[中国]{ちゅうごく}[向]{む}け[商品]{しょうひん}[販売]{はんばい}を7[月]{がつ}に[開始]{かいし}。",
+                zh: "作为应对这些问题的对策之一，该公司于7月在跨境电商服务“天猫国际”上开始面向中国销售商品。",
+            },
+            {
+                ja: "[自社企画商品]{じしゃきかくしょうひん}のウルトラマンカードゲームは[国内外]{こくないがい}でMD[収入]{しゅうにゅう}が[増加]{ぞうか}し、グローバル[累計出荷枚数]{るいけいしゅっかまいすう}は[約]{やく}1[億]{おく}2000[万枚]{まんまい}に[達]{たっ}するなど[収益性]{しゅうえきせい}の[高]{たか}い[商材]{しょうざい}の[展開]{てんかい}も[進]{すす}めている。",
+                zh: "其自主企划的奥特曼卡牌游戏在国内外市场商品收入均有所增加，全球累计出货量达到约1.2亿张，这表明该公司也在推进高收益商品的推广。",
+            },
+            {
+                ja: "また、[地域分散]{ちいきぶんさん}の[試]{こころ}みとして[北米]{ほくべい}・アジア[等]{とう}への[展開]{てんかい}も[同時進行]{どうじしんこう}しており、[同地域]{どうちいき}のライセンス[収入]{しゅうにゅう}は3[億]{おく}7000[万]{まん}[円]{えん}と[同]{どう}37.8%[増]{ぞう}を[記録]{きろく}。",
+                zh: "此外，作为地域分散的尝试，该公司也在同步推进向北美和亚洲等地区的拓展，该地区的授权收入达到3.7亿日元，同比增长37.8%。",
+            },
+            {
+                ja: "[全体]{ぜんたい}では[減収]{げんしゅう}ながらも[地域分散]{ちいきぶんさん}が[進]{すす}んでいる。",
+                zh: "尽管总体的营收有所下降，但地域分散化正在进行中。",
+            },
+        ];
+
+        const contentContainer = document.getElementById('article-content');
+
+        function renderArticle() {
+            articleData.forEach((item, index) => {
+                const p = document.createElement('p');
+                p.setAttribute('data-index', index);
+                p.setAttribute('data-ja', item.ja);
+                p.setAttribute('data-zh', item.zh);
+                p.setAttribute('data-state', 0); // State 0: No Ruby, State 1: With Ruby, State 2: Chinese
+
+                if (item.isTitle) {
+                    p.className = 'title-line p-3 my-5 mt-8 bg-gray-100 rounded-lg shadow-inner text-gray-800';
+                } else if (item.isCaption) {
+                    // Caption/Image text uses a slightly different initial style
+                    p.className = 'sentence-item p-3 text-sm italic bg-yellow-50 rounded-lg shadow-sm text-gray-500';
+                    p.style.borderLeftColor = '#f6ad55';
+                } else {
+                    p.className = 'sentence-item p-3 bg-blue-50 rounded-xl shadow-md text-base md:text-lg';
+                }
+                
+                p.classList.add('text-ja');
+                // Initial state 0: Japanese without Ruby
+                p.innerHTML = stripRubyMarkup(item.ja); 
+
+                p.addEventListener('click', toggleTranslation);
+                contentContainer.appendChild(p);
+            });
+        }
+
+        function toggleTranslation(event) {
+            const p = event.currentTarget;
+            let currentState = parseInt(p.getAttribute('data-state'), 10);
+            
+            // Cycle state: 0 (No Ruby) -> 1 (With Ruby) -> 2 (Chinese) -> 0
+            const nextState = (currentState + 1) % 3;
+            
+            const jaText = p.getAttribute('data-ja');
+            const zhText = p.getAttribute('data-zh');
+            
+            // Remove previous language classes
+            p.classList.remove('text-ja', 'text-zh');
+            
+            let borderColor = ''; // To store the dynamic border color
+            let newContent = ''; // To store the content based on state
+
+            // --- State Transition Logic ---
+            if (nextState === 1) {
+                // State 1: Japanese with Ruby (Furigana)
+                newContent = convertToRuby(jaText);
+                p.setAttribute('data-lang', 'ja');
+                p.classList.add('text-ja');
+                borderColor = '#3182ce'; // Blue border for state 1
+            } else if (nextState === 2) {
+                // State 2: Chinese Translation
+                newContent = zhText;
+                p.setAttribute('data-lang', 'zh');
+                p.classList.add('text-zh');
+                borderColor = '#c53030'; // Red border for state 2
+            } else { // nextState === 0
+                // State 0: Japanese without Ruby (Loop back)
+                newContent = stripRubyMarkup(jaText);
+                p.setAttribute('data-lang', 'ja');
+                p.classList.add('text-ja');
+                borderColor = '#1a202c'; // Dark border for state 0
+            }
+
+            p.innerHTML = newContent;
+            p.setAttribute('data-state', nextState);
+
+            // Apply specific border colors, overriding general sentence-item rule for titles/captions
+            if (p.classList.contains('title-line')) {
+                p.style.borderLeftColor = '#2d3748'; // Title border is fixed gray
+            } else if (p.classList.contains('italic')) {
+                p.style.borderLeftColor = '#f6ad55'; // Caption border is fixed yellow/orange
+            } else {
+                p.style.borderLeftColor = borderColor;
+            }
+        }
+
+        window.onload = renderArticle;
+    </script>
+
+</body>
+</html>
+</p>
   <a href="chapter2.html">下一章 →</a>
 </body>
 </html>
