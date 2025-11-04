@@ -1,0 +1,12 @@
+body {
+  font-family: "微软雅黑", sans-serif;
+  line-height: 1.6;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+}
+h1 { color: #0366d6; }
+a { color: #007bff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+ul { list-style: none; padding: 0; }
+li { margin: 8px 0; }
