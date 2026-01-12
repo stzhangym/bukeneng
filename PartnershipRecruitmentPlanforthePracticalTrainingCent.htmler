@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共赴大海星辰 - 泰州市开放型区域产教融合实践中心</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --tz-red: #B22222; 
+            --tz-red-deep: #7B1B1B;
+            --tz-gold: #FFD700;
+        }
+        body {
+            background-color: #0a0a0a;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            overflow-x: hidden;
+        }
+        .text-tz-red { color: var(--tz-red); }
+        .bg-tz-red { background-color: var(--tz-red); }
+        
+        /* 宏伟感首屏背景 */
+        .hero-section {
+            background: linear-gradient(rgba(123, 27, 27, 0.8), rgba(10, 10, 10, 1)), 
+                        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600'); /* 这里您可以替换为您上传的图片URL */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* 动态星空 */
+        #stars-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* 现代感毛玻璃 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-10px);
+            border-color: var(--tz-red);
+        }
+
+        /* 宏伟字体渐变 */
+        .text-gradient {
+            background: linear-gradient(to bottom, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        .animate-gold {
+            animation: pulse-gold 3s infinite;
+        }
+
+        .section-line {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--tz-red), transparent);
+        }
+    </style>
+</head>
+<body class="text-white">
+
+    <!-- Hero Section -->
+    <header class="hero-section relative min-h-screen flex items-center justify-center overflow-hidden px-6">
+        <canvas id="stars-canvas"></canvas>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block px-6 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 mb-8 backdrop-blur-md animate-bounce">
+                🚀 2026.06 正式启用 · 现已开启预招商
+            </div>
+            <h1 class="text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-none">
+                <span class="text-gradient">共赴大海星辰</span><br>
+                <span class="text-red-600">共筑泰州高地</span>
+            </h1>
+            <p class="text-xl md:text-3xl font-light text-gray-400 mb-12 tracking-widest uppercase">
+                TAIZHOU INDUSTRY-EDUCATION FUSION CENTER
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                <a href="#apply" class="group relative px-10 py-4 bg-red-700 hover:bg-red-600 rounded-full font-bold text-xl transition-all overflow-hidden">
+                    <span class="relative z-10">立即入驻星辰</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500"></div>
+                </a>
+                <a href="#vision" class="px-10 py-4 border border-white/20 hover:bg-white/5 rounded-full font-bold text-xl transition-all">
+                    探索无限可能
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </header>
+
+    <!-- Stats Snapshot -->
+    <section class="py-24 px-6 bg-[#0a0a0a]">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
+            <div class="glass-card p-10 rounded-3xl">
+                <p class="text-red-500 text-sm font-bold tracking-widest mb-4">SCALE / 规模</p>
+                <h3 class="text-5xl font-black mb-4 tracking-tighter">4.66<span class="text-xl text-gray-500 ml-2">万㎡</span></h3>
+                <p class="text-gray-400 leading-relaxed">提供比肩国际水准的现代化研发空间与产业级实验设备物理载体。</p>
+            </div>
+            <div class="glass-card p-10 rounded-3xl border-red-900/50">
+                <p class="text-red-500 text-sm font-bold tracking-widest mb-4">INVESTMENT / 投资</p>
+                <h3 class="text-5xl font-black mb-4 tracking-tighter">2.8<span class="text-xl text-gray-500 ml-2">亿元</span></h3>
+                <p class="text-gray-400 leading-relaxed">“十四五”教育强国项目，8000万中央资金支持，国家级战略背书。</p>
+            </div>
+            <div class="glass-card p-10 rounded-3xl">
+                <p class="text-red-500 text-sm font-bold tracking-widest mb-4">LOCATION / 区位</p>
+                <h3 class="text-5xl font-black mb-4 tracking-tighter">CORE<span class="text-xl text-gray-500 ml-2">枢纽</span></h3>
+                <p class="text-gray-400 leading-relaxed">扎根泰职院核心圈，深度链接区域人才链、创新链与产业链。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Showcase: 宏伟感展示 -->
+    <section id="vision" class="py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-16 items-center">
+                <div class="md:w-1/2">
+                    <div class="section-line mb-6"></div>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">深耕泰州产业<br><span class="text-red-600">奔赴无限未来</span></h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-loose text-justify">
+                        中心不仅是一个地理坐标，更是泰州产业升级的动力源。通过“以教促产、以产兴城”，我们将泰州的产业蓝图变为星辰大海的征途。无论您的项目侧重于教学、研发、生产还是培训，这里都有适配的土壤让梦想落地。
+                    </p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+                            <p class="text-red-500 font-bold">智能装备</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+                            <p class="text-red-500 font-bold">大健康产业</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+                            <p class="text-red-500 font-bold">电子信息</p>
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-center">
+                            <p class="text-red-500 font-bold">校友经济</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <div class="rounded-3xl overflow-hidden shadow-2xl shadow-red-900/20 border border-white/10">
+                        <!-- 这里放置您上传的宏伟图片 -->
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200" alt="宏伟建筑展示" class="w-full h-auto hover:scale-105 transition duration-700">
+                    </div>
+                    <div class="absolute -top-6 -right-6 w-32 h-32 bg-red-600 rounded-full blur-3xl opacity-20"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policies: 政策赋能 -->
+    <section class="py-24 bg-zinc-900 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-bold mb-16 flex items-center gap-4">
+                <span class="text-red-600">02</span> 政策红利 · 全要素赋能
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-8 border-l-2 border-red-600 bg-white/5 hover:bg-white/10 transition">
+                    <h4 class="text-xl font-bold mb-4">租金全免</h4>
+                    <p class="text-gray-400 text-sm">入驻前三年场地租金及物业费全免，零成本起航。</p>
+                </div>
+                <div class="p-8 border-l-2 border-red-600 bg-white/5 hover:bg-white/10 transition">
+                    <h4 class="text-xl font-bold mb-4">定制人才</h4>
+                    <p class="text-gray-400 text-sm">优先为企业定制培养紧缺人才，推荐优秀毕业生。</p>
+                </div>
+                <div class="p-8 border-l-2 border-red-600 bg-white/5 hover:bg-white/10 transition">
+                    <h4 class="text-xl font-bold mb-4">研发共享</h4>
+                    <p class="text-gray-400 text-sm">共享校区内体育、后勤及20多个市级研发平台资源。</p>
+                </div>
+                <div class="p-8 border-l-2 border-red-600 bg-white/5 hover:bg-white/10 transition">
+                    <h4 class="text-xl font-bold mb-4">金融财税</h4>
+                    <p class="text-gray-400 text-sm">协助申报专项债券，争取资金支持并落实税收优惠。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admission Guide -->
+    <section id="apply" class="py-24 px-6 relative">
+        <div class="max-w-4xl mx-auto bg-gradient-to-b from-zinc-800 to-black rounded-[3rem] p-1 md:p-12 border border-white/10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4">星辰大海的通行证</h2>
+                <div class="w-20 h-1 bg-red-600 mx-auto"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-red-500">准入标准 / STANDARDS</h3>
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-full bg-red-600 flex-shrink-0 mt-1"></div>
+                        <p class="text-gray-300">具有独立法人资格、社会信誉良好的优质企业</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-full bg-red-600 flex-shrink-0 mt-1"></div>
+                        <p class="text-gray-300">必须具备教学功能，提供实习实训岗位</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-6 h-6 rounded-full bg-red-600 flex-shrink-0 mt-1"></div>
+                        <p class="text-gray-300">绿色准入：无污染、确保师生安全</p>
+                    </div>
+                </div>
+                <div class="bg-zinc-900 rounded-3xl p-8 border border-white/5">
+                    <h3 class="text-xl font-bold mb-6">联系我们 / CONTACT</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-gray-500 text-xs uppercase">校企合作中心负责人</p>
+                            <p class="text-2xl font-bold tracking-tighter">林睿</p>
+                            <p class="text-red-500 font-mono text-xl">150 0526 5688</p>
+                        </div>
+                        <hr class="border-white/10">
+                        <div>
+                            <p class="text-gray-500 text-xs uppercase">咨询QQ群</p>
+                            <p class="text-2xl font-bold">1063979716</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-20 text-center border-t border-white/5">
+        <p class="text-gray-500 text-sm">© 2024-2026 泰州职业技术学院 · 泰州市开放型区域产教融合实践中心</p>
+        <p class="text-gray-700 mt-2 text-xs">携手共创泰州产业新纪元</p>
+    </footer>
+
+    <script>
+        // 背景星空特效
+        const canvas = document.getElementById('stars-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            stars = [];
+            for(let i = 0; i < 200; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            stars.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+                s.y -= s.speed;
+                if(s.y < 0) s.y = height;
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', init);
+        init();
+        animate();
+    </script>
+</body>
+</html>
