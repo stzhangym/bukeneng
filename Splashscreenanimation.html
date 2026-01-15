@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>船舶与海工装备产教联合体启动仪式演示 - Gemini 增强版</title>
+    <style>
+        :root {
+            --deep-blue: #001529;
+            --tech-blue: #00a2ff;
+            --gold: #ffd700;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--deep-blue);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        #stage {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* 背景纹理 */
+        #bg-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: linear-gradient(rgba(0, 162, 255, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 162, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: rotateX(60deg) translateY(-50%);
+            z-index: 0;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            from { background-position: 0 0; }
+            to { background-position: 0 500px; }
+        }
+
+        /* Gemini 输入界面 */
+        #gemini-config {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            background: rgba(0, 21, 41, 0.8);
+            border: 1px solid var(--tech-blue);
+            padding: 15px;
+            border-radius: 8px;
+            width: 250px;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        #gemini-config input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--tech-blue);
+            color: white;
+            border-radius: 4px;
+        }
+
+        #gemini-config button {
+            width: 100%;
+            padding: 8px;
+            background: var(--tech-blue);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* 弹幕系统 */
+        .danmaku {
+            position: absolute;
+            white-space: nowrap;
+            color: white;
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 50;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        /* 宣誓词展示 */
+        #vow-display {
+            position: absolute;
+            bottom: 100px;
+            width: 80%;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            font-style: italic;
+            z-index: 100;
+            text-shadow: 0 0 10px var(--tech-blue);
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        /* 核心展示区域 */
+        #main-display {
+            z-index: 10;
+            text-align: center;
+            transition: all 1s ease;
+        }
+
+        #energy-circle {
+            width: 300px;
+            height: 300px;
+            border: 2px solid var(--tech-blue);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--tech-blue);
+            transition: all 0.5s;
+        }
+
+        #energy-circle:hover {
+            box-shadow: 0 0 40px var(--tech-blue);
+            transform: scale(1.05);
+        }
+
+        #energy-circle .prompt {
+            color: var(--tech-blue);
+            font-size: 18px;
+            letter-spacing: 2px;
+            animation: breathe 2s infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--tech-blue);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        #ship-container {
+            display: none;
+            width: 600px;
+            height: 300px;
+            position: relative;
+            transform-origin: bottom;
+        }
+
+        .ship-body {
+            width: 500px;
+            height: 80px;
+            background: #222;
+            border-radius: 0 0 40% 100%;
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            border-bottom: 5px solid #a00;
+        }
+
+        .ship-top {
+            width: 200px;
+            height: 60px;
+            background: #eee;
+            position: absolute;
+            bottom: 130px;
+            left: 100px;
+            border-radius: 5px;
+        }
+
+        .launch-anim {
+            animation: ship-launch 4s forwards cubic-bezier(0.45, 0, 0.55, 1);
+        }
+
+        @keyframes ship-launch {
+            0% { transform: translateX(0) translateY(0) rotate(0); }
+            30% { transform: translateX(100px) translateY(20px) rotate(-5deg); }
+            60% { transform: translateX(300px) translateY(60px) rotate(2deg); }
+            100% { transform: translateX(1000px) translateY(100px) rotate(0); opacity: 0; }
+        }
+
+        #splash {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+        }
+
+        #title-overlay {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            opacity: 0;
+            text-align: center;
+            z-index: 100;
+        }
+
+        #title-overlay h1 {
+            font-size: 60px;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        #info-panel {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            border-left: 3px solid var(--tech-blue);
+            padding-left: 15px;
+        }
+
+        #loading {
+            display: none;
+            color: var(--gold);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="stage">
+    <div id="bg-grid"></div>
+
+    <!-- Gemini Config -->
+    <div id="gemini-config">
+        <div style="font-size: 12px; margin-bottom: 5px;">✨ Gemini 智航助理</div>
+        <input type="text" id="vision-input" placeholder="输入愿景关键词 (如: 创新、深蓝)" value="协同创新 智造深蓝">
+        <button onclick="generateVow()">✨ 生成仪式宣誓词</button>
+        <div id="loading">正在通过 Gemini 智能构建...</div>
+    </div>
+    
+    <div id="main-display">
+        <div id="energy-circle" onclick="startCeremony()">
+            <div class="prompt">点击 触碰启动</div>
+        </div>
+
+        <div id="ship-container">
+            <div class="ship-top"></div>
+            <div class="ship-body"></div>
+        </div>
+    </div>
+
+    <div id="vow-display"></div>
+    <div id="splash"></div>
+
+    <div id="title-overlay">
+        <h1>智造深蓝 · 锚定未来</h1>
+        <p style="font-size: 24px; letter-spacing: 10px; color: #fff;">船舶与海工装备产教联合体</p>
+    </div>
+
+    <div id="info-panel">
+        <div>当前状态: <span id="status-text">待命</span></div>
+        <div>视觉方案: 数字化巨轮下水仪式 (Gemini AI 增强)</div>
+    </div>
+</div>
+
+<script>
+    const apiKey = ""; // API Key 留空，由环境自动注入
+    const stage = document.getElementById('stage');
+    const energyCircle = document.getElementById('energy-circle');
+    const shipContainer = document.getElementById('ship-container');
+    const titleOverlay = document.getElementById('title-overlay');
+    const statusText = document.getElementById('status-text');
+    const splash = document.getElementById('splash');
+    const vowDisplay = document.getElementById('vow-display');
+    const loading = document.getElementById('loading');
+
+    let state = 'waiting';
+    let generatedVow = "";
+
+    async function callGemini(prompt, systemInstruction = "") {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined
+        };
+
+        for (let i = 0; i < 5; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text;
+            } catch (e) {
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+            }
+        }
+        return null;
+    }
+
+    async function generateVow() {
+        const keyword = document.getElementById('vision-input').value;
+        loading.style.display = 'block';
+        
+        const systemPrompt = "你是一位庄重的仪式主持人。请根据关键词，为‘船舶与海工装备产教联合体成立大会’生成一段简短、有力、充满未来感的启动宣誓词。字数在40字以内。";
+        const result = await callGemini(`关键词是：${keyword}`, systemPrompt);
+        
+        loading.style.display = 'none';
+        if (result) {
+            generatedVow = result.replace(/\n/g, "");
+            vowDisplay.innerText = generatedVow;
+            vowDisplay.style.opacity = '1';
+        }
+    }
+
+    async function playTTS(text) {
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=" + apiKey;
+        const payload = {
+            contents: [{ parts: [{ text: `庄重地播报：${text}` }] }],
+            generationConfig: {
+                responseModalities: ["AUDIO"],
+                speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } } }
+            },
+            model: "gemini-2.5-flash-preview-tts"
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            const base64Audio = data.candidates[0].content.parts[0].inlineData.data;
+            const audioBlob = base64ToWav(base64Audio, 24000); // 假设采样率
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            audio.play();
+        } catch (e) {
+            console.error("TTS Failed", e);
+        }
+    }
+
+    // 辅助函数：PCM16 转 WAV
+    function base64ToWav(base64, sampleRate) {
+        const binaryString = atob(base64);
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
+        const buffer = bytes.buffer;
+        
+        const wavHeader = new ArrayBuffer(44);
+        const view = new DataView(wavHeader);
+        view.setUint32(0, 0x52494646, false); // "RIFF"
+        view.setUint32(4, 36 + buffer.byteLength, true);
+        view.setUint32(8, 0x57415645, false); // "WAVE"
+        view.setUint32(12, 0x666d7420, false); // "fmt "
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true); // PCM
+        view.setUint16(22, 1, true); // Mono
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        view.setUint32(36, 0x64617461, false); // "data"
+        view.setUint32(40, buffer.byteLength, true);
+
+        return new Blob([wavHeader, buffer], { type: 'audio/wav' });
+    }
+
+    async function createGeminiDanmaku() {
+        const prompt = "生成5条关于船舶与海工联合体成立的简短祝贺弹幕，来自不同的虚构单位，如XX船厂、XX大学。格式为：内容";
+        const result = await callGemini(prompt);
+        if (result) {
+            const lines = result.split('\n').filter(l => l.length > 2);
+            lines.forEach((text, i) => {
+                setTimeout(() => spawnDanmaku(text), i * 1500);
+            });
+        }
+    }
+
+    function spawnDanmaku(text) {
+        const el = document.createElement('div');
+        el.className = 'danmaku';
+        el.innerText = text;
+        el.style.top = (20 + Math.random() * 60) + '%';
+        el.style.left = '100%';
+        stage.appendChild(el);
+        
+        el.animate([
+            { left: '100%' },
+            { left: '-50%' }
+        ], {
+            duration: 8000 + Math.random() * 4000,
+            easing: 'linear'
+        }).onfinish = () => el.remove();
+    }
+
+    function startCeremony() {
+        if (state !== 'waiting') return;
+        
+        // 如果有宣誓词，先播报
+        if (generatedVow) {
+            playTTS(generatedVow);
+        }
+
+        state = 'gathering';
+        statusText.innerText = '能量汇聚中...';
+        document.getElementById('gemini-config').style.opacity = '0';
+        
+        energyCircle.style.boxShadow = '0 0 100px var(--tech-blue)';
+        energyCircle.querySelector('.prompt').innerText = '能量汇聚...';
+        
+        for (let i = 0; i < 50; i++) {
+            createParticle();
+        }
+
+        setTimeout(() => {
+            state = 'activating';
+            statusText.innerText = '核心激活...';
+            energyCircle.style.transform = 'scale(0)';
+            energyCircle.style.opacity = '0';
+            
+            stage.style.backgroundColor = 'white';
+            setTimeout(() => {
+                stage.style.backgroundColor = 'var(--deep-blue)';
+                showShip();
+            }, 100);
+        }, 2000);
+    }
+
+    function createParticle() {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 5 + 2;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 500;
+        const startX = window.innerWidth/2 + Math.cos(angle) * dist;
+        const startY = window.innerHeight/2 + Math.sin(angle) * dist;
+        p.style.left = startX + 'px';
+        p.style.top = startY + 'px';
+        document.body.appendChild(p);
+        const anim = p.animate([{ left: startX + 'px', top: startY + 'px', opacity: 1 }, { left: '50%', top: '50%', opacity: 0 }], { duration: 1500, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' });
+        anim.onfinish = () => p.remove();
+    }
+
+    function showShip() {
+        state = 'launching';
+        statusText.innerText = '巨轮下水仪式...';
+        shipContainer.style.display = 'block';
+        
+        setTimeout(() => {
+            shipContainer.classList.add('launch-anim');
+            setTimeout(() => {
+                splash.style.display = 'block';
+                createSplash();
+                showFinalTitle();
+                // 启动弹幕
+                createGeminiDanmaku();
+            }, 800);
+        }, 1000);
+    }
+
+    function createSplash() {
+        for (let i = 0; i < 100; i++) {
+            const drop = document.createElement('div');
+            drop.style.position = 'absolute';
+            drop.style.background = 'white';
+            drop.style.width = '10px';
+            drop.style.height = '10px';
+            drop.style.borderRadius = '50%';
+            drop.style.left = '70%';
+            drop.style.top = '60%';
+            splash.appendChild(drop);
+            drop.animate([{ transform: 'translate(0, 0)', opacity: 0.8 }, { transform: `translate(${(Math.random()-0.2)*500}px, ${(Math.random()-0.8)*400}px)`, opacity: 0 }], { duration: 2000, easing: 'ease-out' }).onfinish = () => drop.remove();
+        }
+    }
+
+    function showFinalTitle() {
+        titleOverlay.style.transition = 'opacity 2s';
+        titleOverlay.style.opacity = '1';
+        statusText.innerText = '正式航行中';
+    }
+</script>
+
+</body>
+</html>
