@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>泰州市海工装备和高技术船舶产教联合体 - 启动仪式</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --sea-dark: #000b1a;
+            --steel-blue: #1a3a5a;
+            --neon-cyan: #00f2ff;
+            --gold-anchor: #ffcc00;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background: var(--sea-dark);
+            color: white;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        /* 背景网格 - 工业透视感 */
+        .grid-background {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg) translateY(-100px);
+            z-index: 1;
+            mask-image: linear-gradient(to bottom, transparent, black);
+        }
+
+        /* 顶部信息区 */
+        .header-info {
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        /* 巨轮主体容器 */
+        .ship-container {
+            position: absolute;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+            width: 900px;
+            z-index: 20;
+            opacity: 0;
+            transition: all 3s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .ship-active {
+            bottom: 40px;
+            opacity: 1;
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        /* 锚链系统 */
+        .anchor-chain {
+            position: absolute;
+            left: 12%;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 25;
+            transition: transform 3.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        .chain-link {
+            width: 26px;
+            height: 44px;
+            border: 7px solid var(--gold-anchor);
+            border-radius: 14px;
+            margin-top: -12px;
+            background: #111;
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.8), 0 0 15px rgba(255,204,0,0.4);
+        }
+
+        /* 启动按钮设计 */
+        .launch-zone {
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .btn-core {
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, var(--neon-cyan), #0066ff);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 40px var(--neon-cyan);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 5px solid rgba(255,255,255,0.4);
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 20px var(--neon-cyan); }
+            50% { box-shadow: 0 0 60px var(--neon-cyan); }
+            100% { box-shadow: 0 0 20px var(--neon-cyan); }
+        }
+
+        .btn-core:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        .btn-text {
+            color: white;
+            font-weight: 900;
+            letter-spacing: 4px;
+            font-size: 1.2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* 全局震动特效（引擎点火） */
+        @keyframes engine-vibration {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-2px, -2px); }
+            20% { transform: translate(2px, 1px); }
+            30% { transform: translate(-1px, 2px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .vibrating {
+            animation: engine-vibration 0.1s infinite;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-background"></div>
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- 顶部标题与监控信息 -->
+    <div class="header-info">
+        <div class="flex items-center justify-center gap-6 text-cyan-400 font-mono text-xs tracking-[0.2em] mb-6 opacity-80">
+            <span class="bg-cyan-900/40 px-3 py-1 rounded border border-cyan-500/30">坐标定位：32.0163° N / 120.2741° E</span>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                <span>智能海工系统：正常运行</span>
+            </div>
+            <span class="bg-cyan-900/40 px-3 py-1 rounded border border-cyan-500/30">推力：100% 待命</span>
+        </div>
+        <h1 class="text-6xl font-black tracking-[0.15em] text-white italic drop-shadow-[0_10px_20px_rgba(0,242,255,0.6)]">
+            泰州市海工装备和高技术船舶产教联合体
+        </h1>
+        <div class="mt-6 h-1 w-1/3 bg-gradient-to-r from-transparent via-cyan-500 to-transparent mx-auto"></div>
+    </div>
+
+    <!-- 万吨巨轮核心视觉 -->
+    <div class="ship-container" id="mainShip">
+        <svg viewBox="0 0 900 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- 船底阴影 -->
+            <path d="M60 250 L840 250 L800 320 L140 320 Z" fill="#05101a" />
+            <!-- 主船体（深海蓝渐变） -->
+            <path d="M60 250 L840 250 L800 310 L140 310 Z" fill="url(#shipGrad)" />
+            <!-- 船舷结构 -->
+            <path d="M60 250 L80 210 L780 210 L840 250" fill="#162d46" />
+            <!-- 船桥/驾驶室 -->
+            <rect x="620" y="120" width="150" height="90" fill="#1a3a5a" />
+            <rect x="635" y="135" width="120" height="25" fill="#a0f0ff" opacity="0.6" />
+            <!-- 雷达天线系统 -->
+            <line x1="680" y1="100" x2="680" y2="30" stroke="#777" stroke-width="3" />
+            <rect x="660" y="35" width="40" height="5" fill="#00f2ff" rx="2" class="animate-pulse" />
+            
+            <defs>
+                <linearGradient id="shipGrad" x1="450" y1="250" x2="450" y2="310" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#2a527a" />
+                    <stop offset="1" stop-color="#0a1a2a" />
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <!-- 锚链 -->
+        <div class="anchor-chain" id="chain">
+            <div class="chain-link"></div>
+            <div class="chain-link"></div>
+            <div class="chain-link"></div>
+            <div class="chain-link"></div>
+            <div class="chain-link"></div>
+            <!-- 物理船锚 -->
+            <svg width="70" height="70" viewBox="0 0 24 24" fill="var(--gold-anchor)" class="drop-shadow-[0_0_10px_rgba(255,204,0,0.8)]">
+                <path d="M12 2c.55 0 1 .45 1 1v1.1c2.11.23 3.96 1.4 5.02 3.12l-1.68.96C15.63 7.01 14.12 6.2 12.5 6.1V9h3v2h-3v8.5c2.44-.21 4.5-1.78 5.4-3.9l1.8.8C18.42 19.3 15.5 21.2 12 21.2s-6.42-1.9-7.7-4.8l1.8-.8c.9 2.12 2.96 3.69 5.4 3.9V11h-3V9h3V6.1c-1.62.1-3.13.91-3.84 2.08l-1.68-.96C5.04 5.5 6.89 4.33 9 4.1V3c0-.55.45-1 1-1h2z"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- 交互区域 -->
+    <div class="launch-zone">
+        <div class="btn-core" id="launchBtn">
+            <span class="btn-text">点击启动</span>
+        </div>
+        <div id="statusLabel" class="mt-8">
+            <span class="text-cyan-500 font-bold tracking-[0.5em] text-sm uppercase">产教融合 航向未来</span>
+            <p class="text-cyan-500/40 text-[10px] mt-2 font-mono">ENGINE STATUS: READY FOR IGNITION</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        const ship = document.getElementById('mainShip');
+        const chain = document.getElementById('chain');
+        const btn = document.getElementById('launchBtn');
+        const statusLabel = document.getElementById('statusLabel');
+        
+        let width, height;
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1;
+                this.vy = (Math.random() - 0.5) * 1;
+                this.size = Math.random() * 2;
+                this.alpha = Math.random() * 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if(this.x < 0 || this.x > width || this.y < 0 || this.y > height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = `rgba(0, 242, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for(let i = 0; i < 120; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // 启动逻辑
+        btn.onclick = function() {
+            btn.style.pointerEvents = 'none';
+            btn.style.transform = 'scale(0)';
+            btn.style.opacity = '0';
+            
+            statusLabel.innerHTML = `
+                <span class="text-yellow-400 font-bold tracking-[0.3em] text-lg">正在起锚... 引擎预热中</span>
+                <p class="text-yellow-400/60 text-[10px] mt-2 font-mono animate-pulse">PROPELLER SPEED INCREASING...</p>
+            `;
+
+            // 1. 全局引擎震动
+            document.body.classList.add('vibrating');
+            
+            // 2. 升起船锚
+            chain.style.transform = 'translateY(-400px)';
+            chain.style.opacity = '0';
+            
+            // 3. 巨轮入场（模拟向前航行）
+            setTimeout(() => {
+                ship.classList.add('ship-active');
+                
+                // 4. 增强粒子效果（浪花与推进器动力）
+                for(let i = 0; i < 400; i++) {
+                    setTimeout(() => {
+                        const p = new Particle();
+                        p.x = width / 2 + (Math.random() - 0.5) * 800;
+                        p.y = height;
+                        p.vy = -Math.random() * 15 - 5;
+                        p.vx = (Math.random() - 0.5) * 12;
+                        p.size = Math.random() * 4 + 1;
+                        p.alpha = 1;
+                        particles.push(p);
+                    }, i * 3);
+                }
+            }, 800);
+
+            // 5. 状态转换完成
+            setTimeout(() => {
+                document.body.classList.remove('vibrating');
+                statusLabel.innerHTML = `
+                    <span class="text-cyan-400 font-bold tracking-[0.5em] text-2xl drop-shadow-md">联合体 正式启动！</span>
+                    <p class="text-cyan-400/60 text-[10px] mt-2 font-mono">MISSION STATUS: FULL SPEED AHEAD</p>
+                `;
+            }, 4500);
+        };
+    </script>
+</body>
+</html>
